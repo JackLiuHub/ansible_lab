@@ -1,0 +1,18 @@
+---
+- hosts: all
+  gather_facts: no
+  become: no
+  vars: 
+    user_info: 
+    - 小明
+    - 小華
+  tasks:
+
+  - name: get uid > 1000 list
+    command: echo {{ item }} 
+    loop: "{{ user_info }}"
+    register: echo_test
+
+  - debug: msg="{{ echo_test }}"
+
+

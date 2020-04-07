@@ -1,0 +1,18 @@
+---
+- hosts: 127.0.0.1
+  gather_facts: no
+  connection: local
+  become: no
+  vars_prompt:
+  - name: "application"
+    prompt: "Which application do you want to deploy?\n1- Web\n2- Wiki\n"
+    private: no
+
+  tasks:
+  - set_fact: app=web
+    when: ( application == "1" )
+  
+  - set_fact: app=wiki
+    when: ( application == "2" )
+  - debug:
+      msg: "app = {{ app }}"

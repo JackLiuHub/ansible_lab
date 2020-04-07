@@ -1,0 +1,51 @@
+---
+- hosts: client
+  gather_facts: no
+  become: no
+  tasks:
+
+  - name: get uid > 1000 list
+    command: awk -F ':' '$3>=1000 {print $1}'  /etc/passwd
+    register: uid_gt_1000
+
+  - debug: msg="{{ uid_gt_1000 }}"
+
+#  - command: echo $X_SCLS
+#    register: chk_scl
+#    delegate_to: localhost-py2
+
+#  - debug: msg="{{ chk_scl }}"
+#    delegate_to: localhost-py2
+
+  - name: Create tower p2_survey job template
+    tower_job_template:
+      name: "t_p2_surver"
+      job_type: "run"
+      inventory: "i_lab"
+      project: "p-lab_prompt"
+      playbook: "p2_survey.yaml"
+      credential: "root"
+      state: "present"
+      survey_enabled: yes
+      survey_spec: 
+        name: "survey"
+        description: "survey"
+        spec:
+        - index: 0
+          required: true
+          default: "{{ uid_gt_1000.stdout_lines[0] }}"
+          question_description: "choose your prefer user"
+          choices: "{{ uid_gt_1000.stdout_lines }}"
+          variable: user_info
+          question_name: user_list
+          type: multiselect
+          min: null
+          max: null
+      tower_password: redhat
+      tower_username: admin
+      tower_host: localhost
+      validate_certs: no
+    delegate_to: localhost
+    run_once: true
+    #delegate_to: localhost-py2
+

@@ -1,0 +1,18 @@
+---
+- hosts: 127.0.0.1
+  gather_facts: no
+  connection: local
+  become: no
+  vars_prompt:
+
+    - name: username
+      prompt: "What is your username?"
+      private: no
+
+    - name: password
+      prompt: "What is your password?"
+
+  tasks:
+
+    - debug:
+        msg: 'Logging in as {{ username }}'

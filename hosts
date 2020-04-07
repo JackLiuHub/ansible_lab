@@ -1,0 +1,4 @@
+[client]
+10.0.1.138 ansible_username=root ansible_ssh_pass=redhat
+[local]
+localhost-py2 ansible_connection=local ansible_python_interpreter=/opt/rh/python27/root/usr/bin/python
